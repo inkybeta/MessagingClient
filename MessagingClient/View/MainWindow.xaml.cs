@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using MessagingClient.ViewModel;
 
 namespace MessagingClient
@@ -14,7 +15,11 @@ namespace MessagingClient
 		public MainWindow()
 		{
 			InitializeComponent();
-			Closing += (s, e) => ViewModelLocator.Cleanup();
+			Closing += (s, e) =>
+			{
+				ViewModelLocator.Cleanup();
+				Environment.Exit(0);
+			};
 		}
 	}
 }

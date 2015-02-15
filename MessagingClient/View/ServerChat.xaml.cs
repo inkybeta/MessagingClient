@@ -1,6 +1,5 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
@@ -13,6 +12,8 @@ namespace MessagingClient.View
 	/// </summary>
 	public partial class ServerChat : Window
 	{
+
+		private bool _isClosing = false;
 		/// <summary>
 		/// Initializes a new instance of the ServerChat class.
 		/// </summary>
@@ -32,13 +33,16 @@ namespace MessagingClient.View
 			});
 			Messenger.Default.Register<int>(this, (k) =>
 			{
-				if (k == 0)
+				if (k == 0 && !_isClosing)
 				{
-					Dispatcher.Invoke(this.Hide);
 					Dispatcher.Invoke(this.Close);
 				}
 			});
-			Closing += (sender, args) => { Messenger.Default.Send(0); };
+			Closing += (sender, args) =>
+			{
+				_isClosing = true;
+				Messenger.Default.Send(0);
+			};
 		}
 	}
 }

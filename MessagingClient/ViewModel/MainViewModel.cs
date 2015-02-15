@@ -100,11 +100,6 @@ namespace MessagingClient.ViewModel
 				if (k == 0)
 				{
 					CanEdit = true;
-					Dispatcher.CurrentDispatcher.Invoke(() =>
-					{
-						Chat.Hide();
-						Chat.Close();
-					});
 				}
 			});
 		}
