@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace MessagingClient.Core
+﻿namespace MessagingClient.Core
 {
 	public class CommandParameterPair
 	{
@@ -15,7 +9,7 @@ namespace MessagingClient.Core
 		public CommandParameterPair(string command, params string[] parameters)
 		{
 			Command = command;
-			Parameters = parameters;
+			Parameters = parameters ?? new string[0];
 		}
 	}
 }

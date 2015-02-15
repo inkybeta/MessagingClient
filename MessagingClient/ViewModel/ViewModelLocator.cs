@@ -9,10 +9,13 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
+using System.Diagnostics.CodeAnalysis;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
+using GalaSoft.MvvmLight.Messaging;
+using MessagingClient.Design;
 using MessagingClient.Model;
+using Microsoft.Practices.ServiceLocation;
 
 namespace MessagingClient.ViewModel
 {
@@ -28,10 +31,11 @@ namespace MessagingClient.ViewModel
 		static ViewModelLocator()
 		{
 			ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
+			if(!SimpleIoc.Default.IsRegistered<Messenger>("WindowCommands"))
+				SimpleIoc.Default.Register(() => new Messenger(), "WindowCommands");
 			if (ViewModelBase.IsInDesignModeStatic)
 			{
-				SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
+				SimpleIoc.Default.Register<IDataService, DesignDataService>();
 			}
 			else
 			{
@@ -39,20 +43,23 @@ namespace MessagingClient.ViewModel
 			}
 
 			SimpleIoc.Default.Register<MainViewModel>();
+			SimpleIoc.Default.Register<ServerChatViewModel>();
 		}
 
 		/// <summary>
 		/// Gets the Main property.
 		/// </summary>
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+		[SuppressMessage("Microsoft.Performance",
 			"CA1822:MarkMembersAsStatic",
 			Justification = "This non-static member is needed for data binding purposes.")]
 		public MainViewModel Main
 		{
-			get
-			{
-				return ServiceLocator.Current.GetInstance<MainViewModel>();
-			}
+			get { return SimpleIoc.Default.GetInstance<MainViewModel>(); }
+		}
+
+		public ServerChatViewModel Server
+		{
+			get { return SimpleIoc.Default.GetInstance<ServerChatViewModel>(); }
 		}
 
 		/// <summary>
